@@ -1,0 +1,34 @@
+name: Weekly Regulatory Sync
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # Runs every Monday at 02:00 AM UTC
+  workflow_dispatch:      # Allows you to click 'Run workflow' manually for testing
+
+jobs:
+  sync-and-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write     # Grants permission to push commits back to the repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Scraper
+        run: python scraper.py
+
+      - name: Commit and push updated JSON
+        run: |
+          git config --global user.name "HoiBot"
+          git config --global user.email "bot@hoi-ventures.com"
+          git add tax_rules_2026.json
+          git commit -m "Auto-update weekly tax and assumption parameters [skip ci]" || exit 0
+          git push
