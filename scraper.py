@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 import httpx
-from bs4 BeautifulSoup
+from bs4 import BeautifulSoup
 
 # Output filename for consumption by the stress-test service
 OUTPUT_FILE = "tax_rules_2026.json"
